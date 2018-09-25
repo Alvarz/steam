@@ -23,10 +23,11 @@ let UdpServerInstance = new UdpServer();
 UdpServerInstance.startServer();
 UdpServerInstance.listen();
 
-const clientInstance = new UdpClient();
-clientInstance.sendMessage('hellow world thought UDP!');
-//clientInstance.sendMessage('hellow world thought UDP new message!');
+//const clientInstance = new UdpClient();
+//clientInstance.sendMessage('hellow world thought UDP!');
+//UdpClient.sendMessage('hellow world thought UDP new message!');
+UdpClient.sendMessage('hellow world thought UDP!');
 
-
+setTimeout(function(){ UdpClient.sendMessage('hellow world thought UDP!');; }, 5000);
 
 
