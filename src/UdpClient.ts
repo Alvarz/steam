@@ -7,7 +7,7 @@ export default class UdpClient{
   private HOST;
   private MULTICAST_ADDR;
 
-  constructor(){
+   constructor(){
 
     this.PORT = 6024;
     this.HOST = '127.0.0.1';
@@ -72,7 +72,6 @@ export default class UdpClient{
       //self.client.close();
       // setTimeout(function(){ self.client.close(); }, 1000);
     });
-
   
   }
 

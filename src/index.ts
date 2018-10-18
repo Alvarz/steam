@@ -36,6 +36,10 @@ UdpClientInstance.startClient();
 //setTimeout(function(){ UdpServerInstance.sendMessage('broadcast to clients!'); }, 1000);
 //setTimeout(function(){ UdpServerInstance.sendMessage('broadcast to clients new message!'); }, 2000);
 
+//const clientInstance = new UdpClient();
+//clientInstance.sendMessage('hellow world thought UDP!');
+//UdpClient.sendMessage('hellow world thought UDP new message!');
+UdpClientInstance.sendMessage('hellow world thought UDP!');
 
 
 
