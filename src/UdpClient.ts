@@ -4,22 +4,24 @@ export default class UdpClient{
 
   private client;
   private PORT;
+  private SERVER_PORT;
   private HOST;
   private MULTICAST_ADDR;
 
    constructor(){
 
     this.PORT = 6024;
+    this.SERVER_PORT = 6025;
     this.HOST = '127.0.0.1';
     //this.MULTICAST_ADDR = '239.255.255.250'
-    this.MULTICAST_ADDR = '224.0.0.114'
+     this.MULTICAST_ADDR = '224.0.0.114'
+
+     this.startClient();
   }
 
   public startClient(){
   
     let self = this;
-    //this.server.setBroadcast(true);
-    //this.server.setMulticastTTL(128);
     this.client = dgram.createSocket({ type: 'udp4', reuseAddr: true});
 
     
@@ -33,14 +35,13 @@ export default class UdpClient{
     this.client.bind(self.PORT, function(){
 
       self.client.addMembership(self.MULTICAST_ADDR, self.HOST);
-      console.log('client: added memebership to ' + self.MULTICAST_ADDR + ' port ' + self.PORT)
+      console.log('client: added memebership to ' + self.MULTICAST_ADDR + ' host ' + self.HOST)
     
     })
 
   
     this.client.on('message', function (message, remote) {   
-      console.log('A: Epic Command Received. Preparing Relay.');
-      console.log('B: From: ' + remote.address + ':' + remote.port +' - ' + message);
+      console.log('recived msg : From: ' + remote.address + ':' + remote.port +' - ' + message);
     });
 
 
@@ -64,11 +65,12 @@ export default class UdpClient{
     //self.client.setBroadcast(true);
     const self = this;
     let msg = new Buffer(message);
-    self.client.send(msg, 0, msg.length,  self.PORT, self.HOST, function(err, bytes){
+    self.client.send(msg, 0, msg.length,  self.SERVER_PORT, self.HOST, function(err, bytes){
 
       if(err)
         throw err;
-      console.log('client: UDP message sent to ' + self.HOST +':'+ self.PORT);
+
+      console.log('client: UDP message sent to ' + self.HOST +':'+ self.SERVER_PORT);
       //self.client.close();
       // setTimeout(function(){ self.client.close(); }, 1000);
     });

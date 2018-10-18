@@ -10,7 +10,7 @@ export default class UdpServer {
   private news; 
   private clients;
   
-  constructor(){
+  constructor(isMulticast = false){
 
     this.PORT = 6024;
     this.SRC_PORT = 6025;
@@ -24,13 +24,15 @@ export default class UdpServer {
     //
     
       this.news = [
-        "Borussia Dortmund wins German championship",
-        "Tornado warning for the Bay Area",
-        "More rain for the weekend",
-        "Android tablets take over the world",
-        "iPad2 sold out",
-        "Nation's rappers down to last two samples"
+        "event|newUser",
+        "event|newtransaction",
+        "event|deletedUser",
+        "event|UpdatedUser",
+        "event|removedUser",
+        "event|getUser",
       ];
+
+    this.startServer(isMulticast);
   }
 
 
