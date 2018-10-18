@@ -2,9 +2,9 @@ import * as dgram  from 'dgram'
 
 export default class UdpClient{
 
-  private static client;
-  private static PORT;
-  private static HOST;
+  private client;
+  private PORT;
+  private HOST;
 
   constructor(){
 
@@ -17,41 +17,20 @@ export default class UdpClient{
     //this.server.setBroadcast(true);
     //this.server.setMulticastTTL(128);
     this.client = dgram.createSocket('udp4');
-  }
 
 
-  /*
-   *
-   *
-   *
-   *
-   *
-   *
-   * */
-  public listen(){
-    
-
-    const self = this;
-    self.client.on('listening', function () {
-      let address = self.client.address();
-      console.log('client: UDP Client listening on ' + address.address + ":" + address.port);
-      self.client.setBroadcast(true)
-      self.client.setMulticastTTL(128); 
-      self.client.addMembership('224.1.1.1', self.HOST);
-    });
   
-    self.client.on('message', function (message, remote) {   
+    this.client.on('message', function (message, remote) {   
       console.log('A: Epic Command Received. Preparing Relay.');
       console.log('B: From: ' + remote.address + ':' + remote.port +' - ' + message);
     });
 
 
-    self.client.on('close', function() {
+    this.client.on('close', function() {
         console.log('client: Client UDP socket closed : BYE!')
     });
-
-
   }
+
 
   /*
    *
