@@ -6,12 +6,14 @@ export default class UdpServer {
   private PORT;
   private HOST;
   private news; 
-
+  private clients;
+  
   constructor(){
 
     this.PORT = 33333;
     this.HOST = '127.0.0.1';
     this.server = dgram.createSocket('udp4');
+    this.clients = []
     //this.server.setBroadcast(true);
     //this.server.setMulticastTTL(128);
     ////setInterval(broadcastNew, 3000);
@@ -37,9 +39,10 @@ export default class UdpServer {
    * */
   public startServer(){
 
+    let self = this;
+
     //this.server.setBroadcast(true);
     //this.server.setMulticastTTL(128);
-    let self = this;
     self.server.on('listening', function(){
 
       const address = self.server.address();
@@ -49,11 +52,17 @@ export default class UdpServer {
 
     //this.server.bind(this.PORT, this.HOST);
   
-    self.server.bind( self.PORT, self.HOST, function() {
-      self.server.setBroadcast(true)
-      self.server.setMulticastTTL(128);
-      self.server.addMembership('224.1.1.1'); 
-      //setInterval(self.broadcastNew, 3000);
+    self.server.bind( self.PORT, self.HOST);
+
+
+    this.server.on('message', function (message, remote) {
+      console.log('server: recive message from ' + remote.address + ':' + remote.port +' - ' + message);
+      self.clients.push(remote)
+    });
+
+
+    this.server.on('close', function() {
+        console.log('server: Server UDP socket closed : BYE!')
     });
   }
 
@@ -72,61 +81,23 @@ export default class UdpServer {
 
     //let msg = new Buffer(message);
     let msg = new Buffer(self.news[Math.floor(Math.random()*self.news.length)]);
-
-    self.server.send(msg, 0, msg.length,  self.PORT, self.HOST, function(err, bytes){
-
-      if(err)
-        throw err;
-      console.log('server: UDP message sent to ' + self.HOST +':'+ self.PORT);
-      //self.client.close();
-      // setTimeout(function(){ self.client.close(); }, 1000);
-    });
-
-  }
-
-
-  /*
-   *
-   *
-   *
-   *
-   *
-   *
-   * */
-  private broadcastNew() {
-
-    //const self = this;
-
-    let self = this;
-
-      let message = new Buffer(self.news[Math.floor(Math.random()*self.news.length)]);
-      this.server.send(message, 0, message.length, this.PORT, this.HOST);
-      console.log("server: Sent " + message + " to the wire...");
-  }
-
-  /*
-   *
-   *
-   *
-   *
-   *
-   *
-   * */
-  public listen(){
-
-    this.server.on('message', function (message, remote) {
-      console.log('server: recive message from ' + remote.address + ':' + remote.port +' - ' + message);
-    });
-
-
-    this.server.on('close', function() {
-        console.log('server: Server UDP socket closed : BYE!')
-    });
   
-  
+    for(let client of self.clients){
+      
+      console.log(client)
+      let msg = new Buffer(message);
+      self.server.send(msg, 0, msg.length,  client.port, client.address, function(err, bytes){
+
+        if(err)
+          throw err;
+        console.log('server: UDP message sent to ' + client.address +':'+ client.port);
+        //self.client.close();
+        // setTimeout(function(){ self.client.close(); }, 1000);
+      });
+    
+    }
+
   }
-
-
 
 }
 
