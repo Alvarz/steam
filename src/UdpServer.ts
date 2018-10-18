@@ -4,15 +4,19 @@ export default class UdpServer {
 
   private server;
   private PORT;
+  private SRC_PORT;
+  private MULTICAST_ADDR;
   private HOST;
   private news; 
   private clients;
   
   constructor(){
 
-    this.PORT = 33333;
+    this.PORT = 6024;
+    this.SRC_PORT = 6025;
     this.HOST = '127.0.0.1';
     this.server = dgram.createSocket('udp4');
+    this.MULTICAST_ADDR = '224.0.0.114'
     this.clients = []
     //this.server.setBroadcast(true);
     //this.server.setMulticastTTL(128);
@@ -29,6 +33,7 @@ export default class UdpServer {
       ];
   }
 
+
   /*
    *
    *
@@ -37,7 +42,7 @@ export default class UdpServer {
    *
    *
    * */
-  public startServer(){
+  public startServer(isMulticast = false){
 
     let self = this;
 
@@ -51,8 +56,19 @@ export default class UdpServer {
     });
 
     //this.server.bind(this.PORT, this.HOST);
-  
-    self.server.bind( self.PORT, self.HOST);
+
+    if(isMulticast){
+    
+      self.server.bind(self.SRC_PORT, self.HOST, function(){
+        
+        self.server.setMulticastTTL(128)
+      })
+    
+    }
+    else{
+    
+      self.server.bind( self.PORT, self.HOST);
+    }
 
 
     this.server.on('message', function (message, remote) {
@@ -66,6 +82,30 @@ export default class UdpServer {
     });
   }
 
+  public sendMessageMulticast(){
+
+    //self.client.setBroadcast(true);
+    let self = this;
+
+    setInterval(function(){
+
+    //let msg = new Buffer(message);
+  
+    let msg = new Buffer(self.news[Math.floor(Math.random()*self.news.length)]);
+    self.server.send(msg, 0, msg.length,  self.PORT, self.MULTICAST_ADDR, function(err, bytes){
+
+        if(err)
+          throw err;
+
+        console.log('server: UDP message sent to ' + self.MULTICAST_ADDR +' port '+ self.PORT);
+        //self.client.close();
+        // setTimeout(function(){ self.client.close(); }, 1000);
+    });
+
+    }, 4000)
+    
+
+  }
   /*
    *
    *
@@ -74,7 +114,7 @@ export default class UdpServer {
    *
    *
    * */
-  public sendMessage(message){
+  public sendMessage(message = ''){
 
     //self.client.setBroadcast(true);
     let self = this;
@@ -100,13 +140,3 @@ export default class UdpServer {
   }
 
 }
-
-  /*var PORT = 33333;
-var HOST = '127.0.0.1';
-
-var dgram = require('dgram');
-var server = dgram.createSocket('udp4');
-
-
-
-server.bind(PORT, HOST);*/

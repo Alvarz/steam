@@ -1,6 +1,5 @@
 import Steam from './Steam';
 import UdpServer from './UdpServer'
-import UdpClient from './UdpClient'
 
 /**
  * Bearded Logger
@@ -21,10 +20,8 @@ steam.on('end', () => console.log('Done with execute'));
 steam.execute(() => console.log('*** Executing task ***'));*/
 let UdpServerInstance = new UdpServer();
 UdpServerInstance.startServer(true);
+setTimeout(function(){ UdpServerInstance.sendMessageMulticast(); }, 4000);
 
-
-let UdpClientInstance = new UdpClient();
-UdpClientInstance.startClient();
 
 //UdpClientInstance.sendMessage('hellow world thought UDP!');
 
@@ -35,7 +32,3 @@ UdpClientInstance.startClient();
 
 //setTimeout(function(){ UdpServerInstance.sendMessage('broadcast to clients!'); }, 1000);
 //setTimeout(function(){ UdpServerInstance.sendMessage('broadcast to clients new message!'); }, 2000);
-
-
-
-
