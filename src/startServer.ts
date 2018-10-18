@@ -1,5 +1,6 @@
 import Steam from './Steam';
-import UdpServer from './UdpServer'
+import UdpServer from './udp/UdpServer'
+import TcpServer from './tcp/TcpServer'
 
 /**
  * Bearded Logger
@@ -8,8 +9,7 @@ import UdpServer from './UdpServer'
  * @author   Carlos Alvarez <beardedframework@gmail.com>
  */
 
-let UdpServerInstance = new UdpServer(true);
+//let UdpServerInstance = new UdpServer(true);
+//setTimeout(function(){ UdpServerInstance.sendMessageMulticast(); }, 4000);
 
-
-setTimeout(function(){ UdpServerInstance.sendMessageMulticast(); }, 4000);
-
+const TcpServerInstance = new TcpServer();

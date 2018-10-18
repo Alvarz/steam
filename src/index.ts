@@ -1,6 +1,6 @@
 import Steam from './Steam';
-import UdpServer from './UdpServer'
-import UdpClient from './UdpClient'
+import UdpServer from './udp/UdpServer'
+import UdpClient from './udp/UdpClient'
 
 /**
  * Bearded Logger
